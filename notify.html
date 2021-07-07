@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Notification</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <body (load)="load_username()">
+        <br><br>
+        <div class="container">
+            <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">PHP Notification</a>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown" (click)="load_info()">
+                            <a class="showUser dropdown-toggle" data-toggle="dropdown"></a>
+                            <ul class="dropdown-menu info"></ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown" (click)="load_unseen_notification()">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="label label-pill label-danger count" style="border-radius:10px;"></span>
+                                <span class="glyphicon glyphicon-envelope" style="font-size:18px;"></span>
+                            </a>
+                            <ul class="dropdown-menu message"></ul>
+                        </li>
+                    </ul>
+
+                </div>
+            </nav>.
+            <br>
+        </div>
+
+        <script>
+            $(document).ready(function(){
+                //updating the view with username
+                function load_username() {
+                    $.ajax({
+                        url: "fetch-user.php",
+                        method: "POST",
+                        dataType: "json",
+                        success: function (data) {
+                            $('.showUser').html(data.username);
+                        }
+                    });
+                }
+                load_username();
+
+                $(document).on('load', '.showUser', function(){
+                    load_username('yes');
+                });
+
+                function load_info() {
+                    $.ajax({
+                        success: function () {
+                            $('.info').html('<li><a href="logout.php">Logout</a></li>');
+                        }
+                    });
+                }
+                load_info();
+
+                $(document).on('click', '.dropdown-menu-info', function() {
+                    load_info('yes');
+                })
+
+                // updating the view with notifications
+                function load_unseen_notification(view = '') {
+                    $.ajax({
+                        url: "fetch-notify.php",
+                        method: "POST",
+                        data: { view: view },
+                        dataType: "json",
+                        success: function(data) {
+                            $('.message').html(data.notification);
+                            if(data.unseen_notification > 0) {
+                                $('.count').html(data.unseen_notification);
+                            }
+                        }
+                    });
+                }
+                load_unseen_notification();
+
+                // load new notifications
+                $(document).on('click', '.dropdown-toggle', function(){
+                    $('.count').html('');
+                    load_unseen_notification('yes');
+                });
+
+                setInterval(function(){
+                    load_unseen_notification();;
+                }, 5000);
+            });
+
+        </script>
+
+    </body>
+</html>
