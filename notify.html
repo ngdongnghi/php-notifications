@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
-    <body (load)="load_username()">
+    <body (load)="load_user()">
         <br><br>
         <div class="container">
             <nav class="navbar navbar-inverse">
@@ -16,42 +16,46 @@
                     </div>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown" (click)="load_info()">
-                            <a class="showUser dropdown-toggle" data-toggle="dropdown"></a>
-                            <ul class="dropdown-menu info"></ul>
+                            <a class="user dropdown-toggle" data-toggle="dropdown">
+                                <!-- User -->
+                            </a>
+                            <ul class="dropdown-menu info">
+                                <!-- Show user options -->
+                            </ul>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown" (click)="load_unseen_notification()">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <span class="label label-pill label-danger count" style="border-radius:10px;"></span>
-                                <span class="glyphicon glyphicon-envelope" style="font-size:18px;"></span>
+                            <a href="#" class="dropdown-toggle noti" data-toggle="dropdown">                        
+                                <!-- Show notifications -->
                             </a>
-                            <ul class="dropdown-menu message"></ul>
+                            <ul class="dropdown-menu message">
+                                <!-- List notifications -->
+                            </ul>
                         </li>
                     </ul>
-
                 </div>
-            </nav>.
-            <br>
+            </nav>
         </div>
 
         <script>
             $(document).ready(function(){
-                //updating the view with username
-                function load_username() {
+                //updating the view with user
+                function load_user() {
                     $.ajax({
                         url: "fetch-user.php",
                         method: "POST",
                         dataType: "json",
                         success: function (data) {
-                            $('.showUser').html(data.username);
+                            $('.user').html(data.username);
+                            $('.noti').html(data.notifications);
                         }
                     });
                 }
-                load_username();
+                load_user();
 
-                $(document).on('load', '.showUser', function(){
-                    load_username('yes');
+                $(document).on('load', function(){
+                    load_user('yes');
                 });
 
                 function load_info() {
@@ -63,7 +67,7 @@
                 }
                 load_info();
 
-                $(document).on('click', '.dropdown-menu-info', function() {
+                $('.user').on('click', function() {
                     load_info('yes');
                 })
 
@@ -85,7 +89,7 @@
                 load_unseen_notification();
 
                 // load new notifications
-                $(document).on('click', '.dropdown-toggle', function(){
+                $('.noti').on('click', function(){
                     $('.count').html('');
                     load_unseen_notification('yes');
                 });

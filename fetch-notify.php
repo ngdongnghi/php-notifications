@@ -30,6 +30,7 @@
         $status_query = "SELECT * FROM notifications WHERE noti_status = 0 AND noti_user = $user";
         $result_query = mysqli_query($con, $status_query);
         $count = mysqli_num_rows($result_query);
+        $output = '<li><a href="#"><small><em>'.$count.' new notification</em></small></a></li>'.$output;
         $data = array(
             'notification' => $output,
             'unseen_notification'  => $count

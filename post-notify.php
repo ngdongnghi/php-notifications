@@ -31,7 +31,6 @@
                             }
                         ?>
                     </select>
-
                 </div>
                 <div class="form-group">
                     <input type="submit" name="post" id="post" class="btn btn-info" value="Post" />
