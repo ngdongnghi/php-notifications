@@ -22,6 +22,7 @@
                     </li>
                 ';
             }
+            $output .= '<li style="align-items: flex-end;"><a href="#">See more</a></li>';
         }
         else { 
             $output .= '<li><a href="#" class="text-bold text-italic">No Notification Found</a></li>';

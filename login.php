@@ -15,14 +15,14 @@
                 $row = mysqli_fetch_array($result);
                 $_SESSION['username'] = $username;
                 $_SESSION['id'] = $row["id"];
-                header('Location: notify.html');
+                header('Location: index.html');
             }
             else {
-                echo "Login Unsuccessful";
+                echo "<script>alert('Login Unsuccessful')</script>";
             }
         }
         else {
-            echo "Login Unsuccessful";
+            echo "<script>alert('Login Unsuccessful')</script>";
         }
     }
 ?>
