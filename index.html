@@ -9,7 +9,9 @@
         <style>
             .message {
                 height: 200px;
+                width: 300px;
                 overflow-y: auto;
+                overflow-x: auto;
             }
         </style>
     </head>
@@ -38,7 +40,6 @@
                                 <!-- Notifications -->
                             </a>
                             <ul class="dropdown-menu message">
-                               
                                 <!-- List notifications -->
                             </ul>
                         </li>
@@ -65,7 +66,7 @@
                 load_user();
 
                 $(document).on('load', function(){
-                    load_user('yes');
+                    load_user();
                 });
 
                 function load_info() {
@@ -78,7 +79,7 @@
                 load_info();
 
                 $('.user').on('click', function() {
-                    load_info('yes');
+                    load_info();
                 })
 
                 // updating the view with notifications
