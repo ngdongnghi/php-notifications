@@ -2,19 +2,28 @@
     session_start();
     if(isset($_POST['username'])) {
         include('connect.php');
-        $username = mysqli_real_escape_string($con, $_POST["username"]);
-        $password = mysqli_real_escape_string($con, $_POST["password"]);
+        $username = $con->real_escape_string($_POST["username"]);
+        $password = $con->real_escape_string($_POST["password"]);
 
         //$password = md5($password);
 
-        $query = "SELECT id, user_username FROM users WHERE user_username = '$username' AND user_password like '$password'; ";
-        $result = mysqli_query($con, $query);
+    //    $query = "SELECT id, user_username FROM users WHERE user_username = '$username' AND user_password like '$password'; ";
+    //    $result = mysqli_query($con, $query);
+        $stmt = $con->prepare("SELECT id, user_username FROM users WHERE user_username = ? AND user_password = ?");
+        
+        $stmt->bind_param("ss", $username, $password);
+        $stmt->execute();
 
-        if($result) {
-            if(mysqli_num_rows($result) == 1) {
-                $row = mysqli_fetch_array($result);
-                $_SESSION['username'] = $username;
-                $_SESSION['id'] = $row["id"];
+        $stmt->store_result();
+        $stmt->bind_result($id, $user);
+        
+        $result = $stmt->fetch();
+        
+        if($stmt) {
+            if($stmt->num_rows == 1) {
+            //   echo $user;
+                $_SESSION['username'] = $user;
+                $_SESSION['id'] = $id;
                 header('Location: index.html');
             }
             else {

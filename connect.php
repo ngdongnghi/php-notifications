@@ -1,3 +1,3 @@
 <?php
-    $con = mysqli_connect("localhost", "root", "", "noti_db");
+    $con = new mysqli("localhost", "root", "", "noti_db");
 ?>

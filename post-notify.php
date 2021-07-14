@@ -25,8 +25,8 @@
                         <?php
                             include('connect.php');
                             $query = "SELECT * FROM users";
-                            $result = mysqli_query($con, $query);
-                            while($row = mysqli_fetch_array($result)) {
+                            $result = $con->query($query);
+                            while($row = $result->fetch_array()) {
                                 echo '<option value="'.$row["id"].'">'.$row['user_username'].'</option>';
                             }
                         ?>
@@ -37,7 +37,6 @@
                 </div>
             </form>
         </div>
-
 
         <script>
             // submit form and get new records

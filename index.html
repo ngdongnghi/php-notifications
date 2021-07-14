@@ -11,7 +11,11 @@
                 height: 200px;
                 width: 300px;
                 overflow-y: auto;
-                overflow-x: auto;
+            }
+
+            .disabled {
+                pointer-events: none;
+                opacity: 0.6;
             }
         </style>
     </head>
@@ -46,6 +50,10 @@
                     </ul>
                 </div>
             </nav>
+
+            <div class="show-mess">
+
+            </div>
         </div>
 
         <script>
@@ -108,6 +116,23 @@
                 setInterval(function(){
                     load_unseen_notification();;
                 }, 5000);
+
+                //load full mess
+                function load_full_mess(id) {
+                    $.ajax({
+                        url: "show-full-noti.php",
+                        method: "GET",
+                        data: { id: id },
+                        dataType: "json",
+                        success: function(data) {
+                            $('.show-mess').html(data.mess);
+                        }
+                    });
+                }
+                
+                $(document).on('click', function(event) {    
+                    load_full_mess(event.target.id);
+                })
             });
 
         </script>

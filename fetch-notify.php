@@ -3,38 +3,47 @@
     include('connect.php');
     if(isset($_POST['view'])){
         $user = $_SESSION['id'];
+
+        $status_query1 = "SELECT * FROM notifications WHERE noti_status = 0 AND noti_user = $user";
+        $result_query1 = $con->query($status_query1);
+        $count1 = $result_query1->num_rows;
+
         if($_POST["view"] != '') {
             $update_query = "UPDATE notifications SET noti_status = 1 WHERE noti_status = 0";
-            mysqli_query($con, $update_query);
+            $con->query($update_query);
         }
-        $query = "SELECT * FROM notifications WHERE noti_user = $user ORDER BY id DESC";
-        $result = mysqli_query($con, $query);
+    
         $output = '';
 
-        if(mysqli_num_rows($result) > 0) {
-            while($row = mysqli_fetch_array($result)) {
+        $stmt = $con->prepare("SELECT * FROM notifications WHERE noti_user = ? ORDER BY id DESC");
+        $stmt->bind_param("s", $user);
+        $stmt->execute();
+
+        $stmt->store_result();
+        $stmt->bind_result($id, $sub, $mess, $status, $user);
+
+        if($stmt->num_rows > 0) {
+            while($stmt->fetch()) {
                 $output .= '
-                    <li style="">
-                        <a href="#">
-                            <strong>'.$row["noti_sub"].'</strong><br />
-                            <small><em>'.$row["noti_mess"].'</em></small>
+                    <li>
+                        <a href="#" id="'.$id.'" class="show-full-noti" (click)="load_full_mess()">
+                            <strong>'.$sub.'</strong><br />
+                            <small><em>'.substr($mess, 0, 35).'</em></small>
                         </a>
                     </li>
                 ';
             }
-        /*    $output .= '<div class="dropdown-divider"></div>
-                        <li style="align-items: flex-end;"><a href="#">See more</a></li>';*/
         }
-        else { 
+        else {
             $output .= '<li><a href="#" class="text-bold text-italic">No Notification Found</a></li>';
         }
 
         $status_query = "SELECT * FROM notifications WHERE noti_status = 0 AND noti_user = $user";
-        $result_query = mysqli_query($con, $status_query);
-        $count = mysqli_num_rows($result_query);
-        $output = '<li style="position: -webkit-sticky; position: sticky; top: 0px; background-color: white;">
+        $result_query = $con->query($status_query);
+        $count = $result_query->num_rows;
+        $output = '<li class="disabled" style="position: -webkit-sticky; position: sticky; top: 0px; background-color: white;">
                         <a href="#">
-                            <small><em>'.$count.' new notification</em></small>
+                            <small><em>'.$count1.' new notification</em></small>
                         </a>
                     </li>'.$output;
         $data = array(
